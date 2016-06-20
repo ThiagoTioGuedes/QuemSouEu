@@ -1,0 +1,121 @@
+#:kivy 1.0.9
+
+#: import ListAdapter kivy.adapters.listadapter.ListAdapter
+#: import ListItemButton kivy.uix.listview.ListItemButton
+
+
+<MenuPrincipal>:
+    FloatLayout:
+        Button:
+            size_hint: (.5, .15)
+            pos_hint: {'center_x':.5, 'center_y':.75}
+            # background_normal: ''
+            # background_color: [0,0,0,0]
+            text: 'Jogar'
+            # on_press: root.manager.current = 'settings'
+
+        Button:
+            size_hint: (.5, .15)
+            pos_hint: {'center_x':.5, 'center_y':.50}
+            size: root.width/2, root.height/6
+            text: 'Bibliotecas'
+            on_press: root.manager.current = 'listaBiblioteca'
+
+        Button:
+            size_hint: (.5, .15)
+            pos_hint: {'center_x':.5, 'center_y':.25}
+            size: root.width/2, root.height/6
+            text: 'Sair'
+            on_press: app.stop()
+
+<ListaBiblioteca>
+    nome_biblioteca: input_biblioteca
+    lista_view: lista
+    FloatLayout:
+        TextInput:
+            id: input_biblioteca
+            multiline: False
+            font_size: 30
+            # Ao escolher a altura do input como 0, o kivy o cria com a sua altura minima, uma linha
+            size_hint: (.5, .0)
+            height: self.minimum_height
+            pos_hint: {'center_x':.5, 'y':.9}
+
+        Button:
+            size_hint: (.5, .1)
+            pos_hint: {'center_x':.5, 'y':.8}
+            text: 'Nova'
+            on_press: root.criar_biblioteca()
+
+        Button:
+            size_hint: (.5, .1)
+            pos_hint: {'center_x':.5, 'y':.7}
+            text: 'Editar'
+            on_press: root.editar_biblioteca()
+
+        ListView:
+            id: lista
+            size_hint: (.8, .7)
+            pos_hint: {'center_x':.5, 'center_y':.35}
+            adapter:
+                ListAdapter(
+                data=root.lista_bibliotecas,
+                selection_mode='single',
+                allow_empty_selection=False,
+                cls=ListItemButton)
+            canvas.before:
+                Color:
+                    rgb: 1,.5,0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+
+<EditaBiblioteca>
+    nome_item: input_item
+    lista_view: lista
+    biblioteca_label: nome_biblioteca
+
+    FloatLayout:
+        Label:
+            id: nome_biblioteca
+            font_size:30
+            pos_hint: {'center_x':.5, 'y':.9}
+            color: [1, 1, 1, 1]
+        TextInput:
+            id: input_item
+            multiline: False
+            font_size: 30
+            # Ao escolher a altura do input como 0, o kivy o cria com a sua altura minima, uma linha
+            size_hint: (.5, .0)
+            height: self.minimum_height
+            pos_hint: {'center_x':.5, 'y':.8}
+
+        Button:
+            size_hint: (.5, .1)
+            pos_hint: {'center_x':.5, 'y':.7}
+            text: 'Novo Item'
+            on_press: root.criar_item()
+
+        Button:
+            size_hint: (.5, .1)
+            pos_hint: {'center_x':.5, 'y':.6}
+            text: 'Remover Item'
+            on_press: root.remover_item()
+
+        ListView:
+            id: lista
+            size_hint: (.8, .6)
+            pos_hint: {'center_x':.5, 'center_y':.30}
+            adapter:
+                ListAdapter(
+                data=root.lista_itens,
+                selection_mode='multiple',
+                allow_empty_selection=False,
+                cls=ListItemButton)
+            canvas.before:
+                Color:
+                    rgb: 1,.5,0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
