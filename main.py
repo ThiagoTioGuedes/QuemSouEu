@@ -13,15 +13,13 @@ class EditaBiblioteca(Screen):
     biblioteca_label = ObjectProperty(None)
 
     def on_enter(self, *args):
-        self.biblioteca_label.text = biblioteca_selecionada
+        self.nome_item.text = biblioteca_selecionada
 
     def criar_item(self):
         self.lista_itens.append(self.nome_item.text)
 
     def remover_item(self):
         self.lista_itens.remove(self.lista_view.adapter.selection[0].text)
-
-
 
 
 

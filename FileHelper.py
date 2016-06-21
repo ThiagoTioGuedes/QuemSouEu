@@ -4,7 +4,7 @@ import os
 from xml.dom.minidom import parse
 
 def lista_bibliotecas():
-    return os.listdir('Bibliotecas');
+    return tratar_nomes_biliotecas(os.listdir('Bibliotecas'));
 
 
 def criar_pasta_bibliotecas():
@@ -28,3 +28,12 @@ def criar_arquivo(nome_arquivo, lista_itens=[]):
         ET.SubElement(root, "Item").text = item
 
     ET.ElementTree(root).write('Bibliotecas\\'+ nome_arquivo + ".xml")
+
+def tratar_nomes_biliotecas(lista):
+    tmp_lista = []
+
+    for bib in lista:
+        bib = bib.replace('.xml', '')
+        tmp_lista.append(bib)
+
+    return tmp_lista
