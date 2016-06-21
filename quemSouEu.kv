@@ -119,3 +119,40 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
+                    
+                    
+<ListaBibliotecaParaJogar>
+    lista_view: lista
+    FloatLayout:
+        Button:
+            size_hint: (.5, .1)
+            pos_hint: {'center_x':.5, 'y':.95}
+            text: 'Escolher'
+            on_press: root.jogar()
+
+        ListView:
+            id: lista
+            size_hint: (.8, .9)
+            pos_hint: {'center_x':.5, 'center_y':.45}
+            adapter:
+                ListAdapter(
+                data=root.lista_bibliotecas,
+                selection_mode='single',
+                allow_empty_selection=False,
+                cls=ListItemButton)
+            canvas.before:
+                Color:
+                    rgb: 1,.5,0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    
+
+<Jogar>
+    FloatLayout:
+        Label:
+            id: nome_biblioteca
+            text: 'Jogo'
+            font_size:30
+            pos_hint: {'center_x':.5, 'y':.9}
+            color: [0, 0, 0, 1]
