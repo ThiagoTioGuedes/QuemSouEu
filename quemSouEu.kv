@@ -12,7 +12,7 @@
             # background_normal: ''
             # background_color: [0,0,0,0]
             text: 'Jogar'
-            # on_press: root.manager.current = 'settings'
+            on_press: root.manager.current = 'listaBibliotecaJogar'
 
         Button:
             size_hint: (.5, .15)
@@ -80,8 +80,8 @@
         Label:
             id: nome_biblioteca
             font_size:30
-            pos_hint: {'center_x':.5, 'y':.9}
-            color: [0, 0, 0, 1]
+            pos_hint: {'center_x':.5, 'center_y':.95}
+            color: [1, 1, 1, 1]
         TextInput:
             id: input_item
             multiline: False
@@ -111,7 +111,7 @@
                 ListAdapter(
                 data=root.lista_itens,
                 selection_mode='multiple',
-                allow_empty_selection=False,
+                allow_empty_selection=True,
                 cls=ListItemButton)
             canvas.before:
                 Color:
@@ -126,7 +126,7 @@
     FloatLayout:
         Button:
             size_hint: (.5, .1)
-            pos_hint: {'center_x':.5, 'y':.95}
+            pos_hint: {'center_x':.5, 'center_y':.95}
             text: 'Escolher'
             on_press: root.jogar()
 
@@ -148,11 +148,19 @@
                     size: self.size
                     
 
-<Jogar>
+<Jogo>
+    contagem: label_contagem
+    item: label_item
     FloatLayout:
         Label:
-            id: nome_biblioteca
-            text: 'Jogo'
+            id: label_contagem
             font_size:30
-            pos_hint: {'center_x':.5, 'y':.9}
-            color: [0, 0, 0, 1]
+            pos_hint: {'center_x':.5, 'center_y':.9}
+            color: [1, 1, 1, 1]
+
+    FloatLayout:
+        Label:
+            id: label_item
+            font_size:40
+            pos_hint: {'center_x':.5, 'center_y':.5}
+            color: [1, 1, 1, 1]

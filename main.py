@@ -1,13 +1,38 @@
 import FileHelper
+from random import randint
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, ListProperty
 
 # biblioteca que foi selecionada pelo usuario, necessario para a sua edicao
 biblioteca_selecionada = ''
 
+
 class Jogo(Screen):
-    pass
+    contagem = ObjectProperty(None)
+    item = ObjectProperty(None)
+    lista_itens = []
+    i = 0
+
+    def seleciona_item(self):
+        self.item.text = self.lista_itens[randint(0, len(self.lista_itens))-1]
+
+    def on_touch_up(self, touch):
+        self.seleciona_item()
+
+    def on_enter(self, *args):
+        self.i = 0
+        self.lista_itens = FileHelper.abrir_arquivo_biblioteca(biblioteca_selecionada)
+        self.seleciona_item()
+
+    def update(self, dt):
+        if(self.i < 60):
+            self.i += dt
+            self.contagem.text = "{:3.2f}".format(self.i)
+        else:
+            self.i = 0
+            self.parent.current = 'menu'
 
 
 class ListaBibliotecaParaJogar(Screen):
@@ -15,19 +40,12 @@ class ListaBibliotecaParaJogar(Screen):
     lista_view = ObjectProperty(None)
 
     def on_enter(self, *args):
-        self.lista_bibliotecas = FileHelper.lista_bibliotecas();
+        self.lista_bibliotecas = FileHelper.lista_bibliotecas()
 
-    def criar_biblioteca(self):
-        self.lista_bibliotecas.append(self.nome_biblioteca.text)
-        FileHelper.criar_arquivo(self.nome_biblioteca.text, self.lista_bibliotecas)
-
-    def editar_biblioteca(self):
+    def jogar(self):
         global biblioteca_selecionada
         biblioteca_selecionada = self.lista_view.adapter.selection[0].text
-        # o pai eh sm, o screenManager
-        self.parent.current = 'editaBiblioteca'
-
-
+        self.parent.current = 'jogar'
 
 
 class EditaBiblioteca(Screen):
@@ -35,7 +53,7 @@ class EditaBiblioteca(Screen):
     lista_itens = ListProperty([])
     lista_view = ObjectProperty(None)
     biblioteca_label = ObjectProperty(None)
-    
+
     def salvar_biblioteca(self):
         FileHelper.criar_arquivo(biblioteca_selecionada, self.lista_itens)
 
@@ -45,6 +63,7 @@ class EditaBiblioteca(Screen):
 
     def criar_item(self):
         self.lista_itens.append(self.nome_item.text)
+        self.nome_item.text = ''
         self.salvar_biblioteca()
 
     def remover_item(self):
@@ -59,7 +78,7 @@ class ListaBiblioteca(Screen):
     lista_view = ObjectProperty(None)
 
     def on_enter(self, *args):
-        self.lista_bibliotecas = FileHelper.lista_bibliotecas();
+        self.lista_bibliotecas = FileHelper.lista_bibliotecas()
 
     def criar_biblioteca(self):
         self.lista_bibliotecas.append(self.nome_biblioteca.text)
@@ -77,17 +96,19 @@ class MenuPrincipal(Screen):
 
 
 class QuemSouEuApp(App):
-
     def build(self):
         FileHelper.criar_pasta_bibliotecas()
         # Create the screen manager
         sm = ScreenManager()
+        game = Jogo(name='jogar')
+
         sm.add_widget(MenuPrincipal(name='menu'))
         sm.add_widget(ListaBiblioteca(name='listaBiblioteca'))
         sm.add_widget(EditaBiblioteca(name='editaBiblioteca'))
-        sm.add_widget(EditaBiblioteca(name='listaBibliotecaJogar'))
-        sm.add_widget(EditaBiblioteca(name='jogar'))
+        sm.add_widget(ListaBibliotecaParaJogar(name='listaBibliotecaJogar'))
+        sm.add_widget(game)
 
+        Clock.schedule_interval(game.update, 1.0 / 60.0)
         return sm
 
 
