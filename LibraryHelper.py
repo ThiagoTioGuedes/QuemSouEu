@@ -42,3 +42,7 @@ def tratar_nomes_biliotecas(lista):
         tmp_lista.append(bib)
 
     return tmp_lista
+
+# por ser um xml, se a biblioteca tiver espacos a leitura de seu arquivo dara problema
+def tratar_nome_biblioteca(nome_biblioteca):
+    return nome_biblioteca.replace(' ', '_');

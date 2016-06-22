@@ -1,4 +1,4 @@
-import FileHelper
+import LibraryHelper
 from random import randint
 from kivy.app import App
 from kivy.clock import Clock
@@ -14,6 +14,7 @@ class Jogo(Screen):
     item = ObjectProperty(None)
     lista_itens = []
     i = 0
+    entrou = False
 
     def seleciona_item(self):
         self.item.text = self.lista_itens[randint(0, len(self.lista_itens))-1]
@@ -23,12 +24,19 @@ class Jogo(Screen):
 
     def on_enter(self, *args):
         self.i = 0
-        self.lista_itens = FileHelper.abrir_arquivo_biblioteca(biblioteca_selecionada)
+        self.lista_itens = LibraryHelper.abrir_arquivo_biblioteca(biblioteca_selecionada)
         self.seleciona_item()
+        self.entrou = True
+
+    def on_leave(self, *args):
+        self.entrou = False;
 
     def update(self, dt):
-        if(self.i < 60):
-            self.i += dt
+        if self.i < 60:
+            # as paginas sao criadas no inicio, essa checagem impede que a contagem se inicie antes de entrar nesta pagina
+            if self.entrou:
+                self.i += dt
+
             self.contagem.text = "{:3.2f}".format(self.i)
         else:
             self.i = 0
@@ -40,7 +48,7 @@ class ListaBibliotecaParaJogar(Screen):
     lista_view = ObjectProperty(None)
 
     def on_enter(self, *args):
-        self.lista_bibliotecas = FileHelper.lista_bibliotecas()
+        self.lista_bibliotecas = LibraryHelper.lista_bibliotecas()
 
     def jogar(self):
         global biblioteca_selecionada
@@ -55,10 +63,10 @@ class EditaBiblioteca(Screen):
     biblioteca_label = ObjectProperty(None)
 
     def salvar_biblioteca(self):
-        FileHelper.criar_arquivo(biblioteca_selecionada, self.lista_itens)
+        LibraryHelper.criar_arquivo(biblioteca_selecionada, self.lista_itens)
 
     def on_enter(self, *args):
-        self.lista_itens = FileHelper.abrir_arquivo_biblioteca(biblioteca_selecionada)
+        self.lista_itens = LibraryHelper.abrir_arquivo_biblioteca(biblioteca_selecionada)
         self.biblioteca_label.text = biblioteca_selecionada
 
     def criar_item(self):
@@ -78,11 +86,11 @@ class ListaBiblioteca(Screen):
     lista_view = ObjectProperty(None)
 
     def on_enter(self, *args):
-        self.lista_bibliotecas = FileHelper.lista_bibliotecas()
+        self.lista_bibliotecas = LibraryHelper.lista_bibliotecas()
 
     def criar_biblioteca(self):
-        self.lista_bibliotecas.append(self.nome_biblioteca.text)
-        FileHelper.criar_arquivo(self.nome_biblioteca.text, self.lista_bibliotecas)
+        self.lista_bibliotecas.append(LibraryHelper.tratar_nome_biblioteca(self.nome_biblioteca.text))
+        LibraryHelper.criar_arquivo(LibraryHelper.tratar_nome_biblioteca(self.nome_biblioteca.text), [])
 
     def editar_biblioteca(self):
         global biblioteca_selecionada
@@ -97,7 +105,7 @@ class MenuPrincipal(Screen):
 
 class QuemSouEuApp(App):
     def build(self):
-        FileHelper.criar_pasta_bibliotecas()
+        LibraryHelper.criar_pasta_bibliotecas()
         # Create the screen manager
         sm = ScreenManager()
         game = Jogo(name='jogar')

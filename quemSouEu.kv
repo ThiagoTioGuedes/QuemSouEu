@@ -31,32 +31,33 @@
 <ListaBiblioteca>
     nome_biblioteca: input_biblioteca
     lista_view: lista
+
     FloatLayout:
         TextInput:
             id: input_biblioteca
             multiline: False
             font_size: 30
             # Ao escolher a altura do input como 0, o kivy o cria com a sua altura minima, uma linha
-            size_hint: (.5, .0)
+            size_hint: (1, .1)
             height: self.minimum_height
             pos_hint: {'center_x':.5, 'y':.9}
 
         Button:
             size_hint: (.5, .1)
-            pos_hint: {'center_x':.5, 'y':.8}
+            pos_hint: {'center_x':.25, 'y':.8}
             text: 'Nova'
             on_press: root.criar_biblioteca()
 
         Button:
             size_hint: (.5, .1)
-            pos_hint: {'center_x':.5, 'y':.7}
+            pos_hint: {'center_x':.75, 'y':.8}
             text: 'Editar'
             on_press: root.editar_biblioteca()
 
         ListView:
             id: lista
-            size_hint: (.8, .7)
-            pos_hint: {'center_x':.5, 'center_y':.35}
+            size_hint: (1, .7)
+            pos_hint: {'center_x':.5, 'center_y':.45}
             adapter:
                 ListAdapter(
                 data=root.lista_bibliotecas,
@@ -70,6 +71,12 @@
                     pos: self.pos
                     size: self.size
 
+        Button:
+            size_hint: (.2, .1)
+            pos_hint: {'center_x':.1, 'center_y':.05}
+            text: 'Retornar'
+            on_press: root.parent.current = 'menu'
+
 
 <EditaBiblioteca>
     nome_item: input_item
@@ -80,6 +87,7 @@
         Label:
             id: nome_biblioteca
             font_size:30
+            size_hint:(.1, .1)
             pos_hint: {'center_x':.5, 'center_y':.95}
             color: [1, 1, 1, 1]
         TextInput:
@@ -87,26 +95,26 @@
             multiline: False
             font_size: 30
             # Ao escolher a altura do input como 0, o kivy o cria com a sua altura minima, uma linha
-            size_hint: (.5, .0)
+            size_hint: (1, .1)
             height: self.minimum_height
-            pos_hint: {'center_x':.5, 'y':.8}
+            pos_hint: {'center_x':.5, 'center_y':.85}
 
         Button:
             size_hint: (.5, .1)
-            pos_hint: {'center_x':.5, 'y':.7}
+            pos_hint: {'center_x':.25, 'center_y':.75}
             text: 'Novo Item'
             on_press: root.criar_item()
 
         Button:
             size_hint: (.5, .1)
-            pos_hint: {'center_x':.5, 'y':.6}
+            pos_hint: {'center_x':.75, 'center_y':.75}
             text: 'Remover Item'
             on_press: root.remover_item()
 
         ListView:
             id: lista
-            size_hint: (.8, .6)
-            pos_hint: {'center_x':.5, 'center_y':.30}
+            size_hint: (1, .6)
+            pos_hint: {'center_x':.5, 'center_y':.40}
             adapter:
                 ListAdapter(
                 data=root.lista_itens,
@@ -119,6 +127,12 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
+
+        Button:
+            size_hint: (.2, .1)
+            pos_hint: {'center_x':.1, 'center_y':.05}
+            text: 'Retornar'
+            on_press: root.parent.current = 'menu'
                     
                     
 <ListaBibliotecaParaJogar>
