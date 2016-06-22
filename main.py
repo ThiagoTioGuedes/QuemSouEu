@@ -37,17 +37,19 @@ class EditaBiblioteca(Screen):
     biblioteca_label = ObjectProperty(None)
     
     def salvar_biblioteca(self):
-        FileHelper.criar_arquivo(biblioteca_selecionada, self.ista_itens)
+        FileHelper.criar_arquivo(biblioteca_selecionada, self.lista_itens)
 
     def on_enter(self, *args):
-        self.nome_item.text = biblioteca_selecionada
+        self.lista_itens = FileHelper.abrir_arquivo_biblioteca(biblioteca_selecionada)
+        self.biblioteca_label.text = biblioteca_selecionada
 
     def criar_item(self):
         self.lista_itens.append(self.nome_item.text)
         self.salvar_biblioteca()
 
     def remover_item(self):
-        self.lista_itens.remove(self.lista_view.adapter.selection[0].text)
+        for item in self.lista_view.adapter.selection:
+            self.lista_itens.remove(item.text)
         self.salvar_biblioteca()
 
 

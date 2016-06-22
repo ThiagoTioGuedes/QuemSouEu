@@ -12,8 +12,12 @@ def abrir_arquivo_biblioteca(nome_arquivo):
     domtree = parse('Bibliotecas\\'+nome_arquivo+".xml")
     collection = domtree.documentElement
 
+    tmpRetorno = []
     # Pega todos os itens que foram cadastrados
-    return collection.getElementsByTagName("Item")
+    for item in collection.getElementsByTagName("Item"):
+        tmpRetorno.append(item.firstChild.nodeValue)
+
+    return tmpRetorno
 
 
 def criar_arquivo(nome_arquivo, lista_itens=[]):
