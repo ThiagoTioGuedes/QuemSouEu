@@ -178,3 +178,36 @@
             font_size:40
             pos_hint: {'center_x':.5, 'center_y':.5}
             color: [1, 1, 1, 1]
+            
+
+<ListaBibliotecaParaBaixar>
+    lista_view: lista
+    FloatLayout:
+        Button:
+            size_hint: (.5, .1)
+            pos_hint: {'center_x':.5, 'center_y':.95}
+            text: 'Baixar'
+            on_press: root.baixar_biblioteca()
+
+        ListView:
+            id: lista
+            size_hint: (.8, .8)
+            pos_hint: {'center_x':.5, 'center_y':.40}
+            adapter:
+                ListAdapter(
+                data=root.lista_bibliotecas,
+                selection_mode='single',
+                allow_empty_selection=False,
+                cls=ListItemButton)
+            canvas.before:
+                Color:
+                    rgb: 1,.5,0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+        Button:
+            size_hint: (.2, .1)
+            pos_hint: {'center_x':.1, 'center_y':.05}
+            text: 'Retornar'
+            on_press: root.parent.current = 'menu'    

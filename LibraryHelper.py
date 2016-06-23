@@ -4,6 +4,22 @@ import os
 from xml.dom.minidom import parse
 
 
+
+def abrir_arquivo_banco_bibliotecas():
+    # Aqui abrimos o arquivo XML que lista todas as bibliotecas presentes no
+    # servidor, já foi previamente baixado, usando o minidom parser
+    domtree = parse('Bibliotecas\\banco_bibliotecas.xml')
+    collection = domtree.documentElement
+
+    tmpRetorno = []
+    # Pega todas as bibliotecas que foram cadastradas no servidor
+    for item in collection.getElementsByTagName("Biblioteca"):
+        tmpRetorno.append(item.firstChild.nodeValue)
+
+    return tmpRetorno
+    
+    
+
 def lista_bibliotecas():
     return tratar_nomes_biliotecas(os.listdir('Bibliotecas'));
 

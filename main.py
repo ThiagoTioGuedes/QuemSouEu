@@ -1,4 +1,5 @@
 import LibraryHelper
+import NetHelper
 from random import randint
 from kivy.app import App
 from kivy.clock import Clock
@@ -8,6 +9,16 @@ from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProper
 # biblioteca que foi selecionada pelo usuario, necessario para a sua edicao
 biblioteca_selecionada = ''
 
+class ListaBibliotecaParaBaixar(Screen):
+    lista_bibliotecas = []
+    lista_view = ObjectProperty(None)
+
+    def on_enter(self, *args):
+        NetHelper.baixar_banco_bibliotecas()
+        self.lista_bibliotecas = LibraryHelper.abrir_arquivo_banco_bibliotecas()
+
+    def baixar_biblioteca(self):
+        NetHelper.baixar_biblioteca(self.lista_view.adapter.selection[0].text)
 
 class Jogo(Screen):
     contagem = ObjectProperty(None)
