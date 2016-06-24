@@ -7,8 +7,8 @@ from xml.dom.minidom import parse
 
 def abrir_arquivo_banco_bibliotecas():
     # Aqui abrimos o arquivo XML que lista todas as bibliotecas presentes no
-    # servidor, já foi previamente baixado, usando o minidom parser
-    domtree = parse('Bibliotecas\\banco_bibliotecas.xml')
+    # servidor, ja foi previamente baixado, usando o minidom parser
+    domtree = parse('Bibliotecas'+os.sep+'banco_bibliotecas.xml')
     collection = domtree.documentElement
 
     tmpRetorno = []
@@ -25,7 +25,7 @@ def lista_bibliotecas():
 
 def abrir_arquivo_biblioteca(nome_arquivo):
     # Aqui abrimos o arquivo XML usando o minidom parser
-    domtree = parse('Bibliotecas\\'+nome_arquivo+".xml")
+    domtree = parse('Bibliotecas'+os.sep+nome_arquivo+".xml")
     collection = domtree.documentElement
 
     tmpRetorno = []
@@ -42,7 +42,7 @@ def criar_arquivo(nome_arquivo, lista_itens=[]):
     for item in lista_itens:
         ET.SubElement(root, "Item").text = item
 
-    ET.ElementTree(root).write('Bibliotecas\\'+ nome_arquivo + ".xml")
+    ET.ElementTree(root).write('Bibliotecas'+os.sep+ nome_arquivo + ".xml")
 
 
 # metodos uteis

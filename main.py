@@ -5,6 +5,8 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, ListProperty
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 
 # biblioteca que foi selecionada pelo usuario, necessario para a sua edicao
 biblioteca_selecionada = ''
@@ -13,12 +15,19 @@ class ListaBibliotecaParaBaixar(Screen):
     lista_bibliotecas = []
     lista_view = ObjectProperty(None)
 
+    def dismiss(self):
+        self.parent.current = 'editaBiblioteca'
+    
     def on_enter(self, *args):
         NetHelper.baixar_banco_bibliotecas()
         self.lista_bibliotecas = LibraryHelper.abrir_arquivo_banco_bibliotecas()
 
     def baixar_biblioteca(self):
+        biblioteca_selecionada = self.lista_view.adapter.selection[0].text
         NetHelper.baixar_biblioteca(self.lista_view.adapter.selection[0].text)
+        popup = Popup(title='Sucesso', content=Label(text='Biblioteca '+biblioteca_selecionada+' foi baixada com sucesso'))
+        popup.bind(on_dismiss=self.dismiss)
+        popup.open()
 
 class Jogo(Screen):
     contagem = ObjectProperty(None)
