@@ -1,3 +1,4 @@
+from AssetsHelper import SoundManager
 import LibraryHelper
 import NetHelper
 from random import randint
@@ -12,11 +13,11 @@ from kivy.uix.label import Label
 biblioteca_selecionada = ''
 
 class ListaBibliotecaParaBaixar(Screen):
-    lista_bibliotecas = []
+    lista_bibliotecas = ListProperty([])
     lista_view = ObjectProperty(None)
-
-    def dismiss(self):
-        self.parent.current = 'editaBiblioteca'
+    #
+    # def dismiss(self):
+    #     self.parent.current = 'editaBiblioteca'
     
     def on_enter(self, *args):
         NetHelper.baixar_banco_bibliotecas()
@@ -25,11 +26,11 @@ class ListaBibliotecaParaBaixar(Screen):
     def baixar_biblioteca(self):
         biblioteca_selecionada = self.lista_view.adapter.selection[0].text
         NetHelper.baixar_biblioteca(self.lista_view.adapter.selection[0].text)
-        popup = Popup(title='Sucesso', content=Label(text='Biblioteca '+biblioteca_selecionada+' foi baixada com sucesso'))
-        popup.bind(on_dismiss=self.dismiss)
+        popup = Popup(title='Sucesso', content=Label(text='Biblioteca '+biblioteca_selecionada+' foi baixada com sucesso'), size_hint=(.5, .5))
         popup.open()
 
 class Jogo(Screen):
+    sound_manager = SoundManager()
     contagem = ObjectProperty(None)
     item = ObjectProperty(None)
     lista_itens = []
@@ -38,9 +39,11 @@ class Jogo(Screen):
 
     def seleciona_item(self):
         self.item.text = self.lista_itens[randint(0, len(self.lista_itens))-1]
+        self.sound_manager.toca_som()
 
     def on_touch_up(self, touch):
         self.seleciona_item()
+        self.sound_manager.toca_som()
 
     def on_enter(self, *args):
         self.i = 0
@@ -124,16 +127,19 @@ class MenuPrincipal(Screen):
 
 
 class QuemSouEuApp(App):
+
     def build(self):
         LibraryHelper.criar_pasta_bibliotecas()
         # Create the screen manager
         sm = ScreenManager()
+
         game = Jogo(name='jogar')
 
         sm.add_widget(MenuPrincipal(name='menu'))
         sm.add_widget(ListaBiblioteca(name='listaBiblioteca'))
         sm.add_widget(EditaBiblioteca(name='editaBiblioteca'))
         sm.add_widget(ListaBibliotecaParaJogar(name='listaBibliotecaJogar'))
+        sm.add_widget(ListaBibliotecaParaBaixar(name='listaBibliotecaBaixar'))
         sm.add_widget(game)
 
         Clock.schedule_interval(game.update, 1.0 / 60.0)

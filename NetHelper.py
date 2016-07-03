@@ -27,7 +27,7 @@ def enviar_biblioteca(nome_biblioteca):
     return client.put_file('Bibliotecas'+os.sep+nome_biblioteca+'.xml', f, overwrite=True)
 
 def baixar_biblioteca(nome_biblioteca):
-    f = client.get_file('Bibliotecas'+os.sep+nome_biblioteca+'.xml')    
+    f = client.get_file('Bibliotecas/'+nome_biblioteca+'.xml')
     out = open('Bibliotecas'+os.sep+nome_biblioteca+'.xml', 'wb')
     out.write(f.read())
     out.close()

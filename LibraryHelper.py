@@ -14,7 +14,7 @@ def abrir_arquivo_banco_bibliotecas():
     tmpRetorno = []
     # Pega todas as bibliotecas que foram cadastradas no servidor
     for item in collection.getElementsByTagName("Biblioteca"):
-        tmpRetorno.append(item.firstChild.nodeValue)
+        tmpRetorno.append(str(item.firstChild.nodeValue))
 
     return tmpRetorno
     

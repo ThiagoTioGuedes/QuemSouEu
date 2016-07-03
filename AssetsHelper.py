@@ -7,7 +7,7 @@ class SoundManager:
         
     def toca_som(self):
         if self.sound:
-            self.sound.play()    
+            self.sound.play()
 
 
 def carregar_som(nome_som):
