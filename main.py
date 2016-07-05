@@ -1,7 +1,6 @@
-from pip._vendor.ipaddress import NetmaskValueError
-from AssetsHelper import SoundManager
 import LibraryHelper
 import NetHelper
+from AssetsHelper import SoundManager
 from random import randint
 from kivy.app import App
 from kivy.clock import Clock
@@ -13,14 +12,13 @@ from kivy.uix.label import Label
 # biblioteca que foi selecionada pelo usuario, necessario para a sua edicao
 biblioteca_selecionada = ''
 
-
 class ListaBibliotecaParaBaixar(Screen):
-    lista_bibliotecas = ListProperty([])
+    lista_bibliotecas = []
     lista_view = ObjectProperty(None)
-    #
-    # def dismiss(self):
-    #     self.parent.current = 'editaBiblioteca'
 
+    def dismiss(self):
+        self.parent.current = 'editaBiblioteca'
+    
     def on_enter(self, *args):
         NetHelper.baixar_banco_bibliotecas()
         self.lista_bibliotecas = LibraryHelper.abrir_arquivo_banco_bibliotecas()
@@ -28,40 +26,38 @@ class ListaBibliotecaParaBaixar(Screen):
     def baixar_biblioteca(self):
         biblioteca_selecionada = self.lista_view.adapter.selection[0].text
         NetHelper.baixar_biblioteca(self.lista_view.adapter.selection[0].text)
-        popup = Popup(title='Sucesso',
-                      content=Label(text='Biblioteca ' + biblioteca_selecionada + ' foi baixada com sucesso'),
-                      size_hint=(.5, .5))
+        popup = Popup(title='Sucesso', content=Label(text='Biblioteca '+biblioteca_selecionada+' foi baixada com sucesso'))
+        popup.bind(on_dismiss=self.dismiss)
         popup.open()
 
-
 class Jogo(Screen):
-    sound_manager = SoundManager()
+    player = SoundManager()
     contagem = ObjectProperty(None)
     item = ObjectProperty(None)
     lista_itens = []
-    entrou = False
-    i = 0
-    # Essas duas variaveis servirao para saber quanto tempo se passou entre o comeco e o fim do toque
+    tempo_passado = 0
+    # variaveis que servirao para contar o tempo entre o comeco e o fim
     inicio_toque = 0
     fim_toque = 0
+    
+    entrou = False
 
     def seleciona_item(self):
-        self.item.text = self.lista_itens[randint(0, len(self.lista_itens)) - 1]
-
+        self.item.text = self.lista_itens[randint(0, len(self.lista_itens))-1]
+    
     def on_touch_down(self, touch):
-        self.inicio_toque = self.contagem
-
+        self.inicio_toque = self.tempo_passado
+    
     def on_touch_up(self, touch):
-        self.fim_toque = self.contagem
-        print('Inicio do toque:'+str(self.inicio_toque))
-        print('Fim do toque:'+str(self.fim_toque))
-
-        if (self.fim_toque - self.inicio_toque) < 500:
-            self.sound_manager.toca_som()
-
+        self.inicio_toque = self.tempo_passado
+        
+        # Se foi segurado por 1 segundo ou mais, passa com erro
+        if (self.fim_toque - self.inicio_toque) > 1:
+            self.player.toca_erro()
+        else:
+            self.player.toca_acerto()
+        
         self.seleciona_item()
-
-
 
     def on_enter(self, *args):
         self.i = 0
@@ -76,11 +72,11 @@ class Jogo(Screen):
         if self.i < 60:
             # as paginas sao criadas no inicio, essa checagem impede que a contagem se inicie antes de entrar nesta pagina
             if self.entrou:
-                self.i += dt
+                self.tempo_passado += dt
 
-            self.contagem.text = "{:3.2f}".format(self.i)
+            self.contagem.text = "{:3.2f}".format(self.tempo_passado)
         else:
-            self.i = 0
+            self.tempo_passado = 0
             self.parent.current = 'menu'
 
 
@@ -139,11 +135,6 @@ class ListaBiblioteca(Screen):
         # o pai eh sm, o screenManager
         self.parent.current = 'editaBiblioteca'
 
-        # Codigo para verao futura
-        # def enviar_biblioteca(self):
-        #     for item in self.lista_view.adapter.selection:
-        #         LibraryHelper.adicionar_biblioteca(item.text)
-
 
 class MenuPrincipal(Screen):
     pass
@@ -154,14 +145,12 @@ class QuemSouEuApp(App):
         LibraryHelper.criar_pasta_bibliotecas()
         # Create the screen manager
         sm = ScreenManager()
-
         game = Jogo(name='jogar')
 
         sm.add_widget(MenuPrincipal(name='menu'))
         sm.add_widget(ListaBiblioteca(name='listaBiblioteca'))
         sm.add_widget(EditaBiblioteca(name='editaBiblioteca'))
         sm.add_widget(ListaBibliotecaParaJogar(name='listaBibliotecaJogar'))
-        sm.add_widget(ListaBibliotecaParaBaixar(name='listaBibliotecaBaixar'))
         sm.add_widget(game)
 
         Clock.schedule_interval(game.update, 1.0 / 60.0)
