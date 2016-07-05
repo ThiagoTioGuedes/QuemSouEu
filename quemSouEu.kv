@@ -51,16 +51,18 @@
             pos_hint: {'center_x':.5, 'y':.9}
 
         Button:
-            size_hint: (.5, .1)
+            size_hint: (.4, .1)
             pos_hint: {'center_x':.25, 'y':.8}
             text: 'Nova'
             on_press: root.criar_biblioteca()
 
         Button:
-            size_hint: (.5, .1)
+            size_hint: (.4, .1)
             pos_hint: {'center_x':.75, 'y':.8}
             text: 'Editar'
             on_press: root.editar_biblioteca()
+
+
 
         ListView:
             id: lista
@@ -199,8 +201,8 @@
 
         ListView:
             id: lista
-            size_hint: (.8, .8)
-            pos_hint: {'center_x':.5, 'center_y':.40}
+            size_hint: (.8, .7)
+            pos_hint: {'center_x':.5, 'center_y':.45}
             adapter:
                 ListAdapter(
                 data=root.lista_bibliotecas,

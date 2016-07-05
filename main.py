@@ -1,3 +1,4 @@
+from pip._vendor.ipaddress import NetmaskValueError
 from AssetsHelper import SoundManager
 import LibraryHelper
 import NetHelper
@@ -12,13 +13,14 @@ from kivy.uix.label import Label
 # biblioteca que foi selecionada pelo usuario, necessario para a sua edicao
 biblioteca_selecionada = ''
 
+
 class ListaBibliotecaParaBaixar(Screen):
     lista_bibliotecas = ListProperty([])
     lista_view = ObjectProperty(None)
     #
     # def dismiss(self):
     #     self.parent.current = 'editaBiblioteca'
-    
+
     def on_enter(self, *args):
         NetHelper.baixar_banco_bibliotecas()
         self.lista_bibliotecas = LibraryHelper.abrir_arquivo_banco_bibliotecas()
@@ -26,24 +28,40 @@ class ListaBibliotecaParaBaixar(Screen):
     def baixar_biblioteca(self):
         biblioteca_selecionada = self.lista_view.adapter.selection[0].text
         NetHelper.baixar_biblioteca(self.lista_view.adapter.selection[0].text)
-        popup = Popup(title='Sucesso', content=Label(text='Biblioteca '+biblioteca_selecionada+' foi baixada com sucesso'), size_hint=(.5, .5))
+        popup = Popup(title='Sucesso',
+                      content=Label(text='Biblioteca ' + biblioteca_selecionada + ' foi baixada com sucesso'),
+                      size_hint=(.5, .5))
         popup.open()
+
 
 class Jogo(Screen):
     sound_manager = SoundManager()
     contagem = ObjectProperty(None)
     item = ObjectProperty(None)
     lista_itens = []
-    i = 0
     entrou = False
+    i = 0
+    # Essas duas variaveis servirao para saber quanto tempo se passou entre o comeco e o fim do toque
+    inicio_toque = 0
+    fim_toque = 0
 
     def seleciona_item(self):
-        self.item.text = self.lista_itens[randint(0, len(self.lista_itens))-1]
-        self.sound_manager.toca_som()
+        self.item.text = self.lista_itens[randint(0, len(self.lista_itens)) - 1]
+
+    def on_touch_down(self, touch):
+        self.inicio_toque = self.contagem
 
     def on_touch_up(self, touch):
+        self.fim_toque = self.contagem
+        print('Inicio do toque:'+str(self.inicio_toque))
+        print('Fim do toque:'+str(self.fim_toque))
+
+        if (self.fim_toque - self.inicio_toque) < 500:
+            self.sound_manager.toca_som()
+
         self.seleciona_item()
-        self.sound_manager.toca_som()
+
+
 
     def on_enter(self, *args):
         self.i = 0
@@ -121,13 +139,17 @@ class ListaBiblioteca(Screen):
         # o pai eh sm, o screenManager
         self.parent.current = 'editaBiblioteca'
 
+        # Codigo para verao futura
+        # def enviar_biblioteca(self):
+        #     for item in self.lista_view.adapter.selection:
+        #         LibraryHelper.adicionar_biblioteca(item.text)
+
 
 class MenuPrincipal(Screen):
     pass
 
 
 class QuemSouEuApp(App):
-
     def build(self):
         LibraryHelper.criar_pasta_bibliotecas()
         # Create the screen manager

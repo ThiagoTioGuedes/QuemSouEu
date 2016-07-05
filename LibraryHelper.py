@@ -1,8 +1,9 @@
+import NetHelper
+
 __author__ = 'Thiago'
 import xml.etree.cElementTree as ET
 import os
-from xml.dom.minidom import parse
-
+from xml.dom.minidom import parse, Node
 
 
 def abrir_arquivo_banco_bibliotecas():
@@ -35,6 +36,20 @@ def abrir_arquivo_biblioteca(nome_arquivo):
 
     return tmpRetorno
 
+def adicionar_biblioteca(nome_biblioteca):
+    domtree = parse('Bibliotecas'+os.sep+'banco_bibliotecas.xml')
+
+    novo_no = domtree.createElement("Biblioteca")
+    txt = domtree.createTextNode(nome_biblioteca)
+    novo_no.appendChild(txt)
+    domtree.childNodes[0].appendChild(novo_no)
+
+    domtree.toxml()
+    domtree.unlink()
+
+    NetHelper.enviar_biblioteca(nome_biblioteca)
+    NetHelper.enviar_biblioteca("banco_bibliotecas")
+
 
 def criar_arquivo(nome_arquivo, lista_itens=[]):
     root = ET.Element(nome_arquivo)
@@ -55,7 +70,9 @@ def tratar_nomes_biliotecas(lista):
 
     for bib in lista:
         bib = bib.replace('.xml', '')
-        tmp_lista.append(bib)
+        # Para que nao liste por engano o arquivo que lista as bibliotecas
+        if not bib == 'banco_bibliotecas':
+            tmp_lista.append(bib)
 
     return tmp_lista
 

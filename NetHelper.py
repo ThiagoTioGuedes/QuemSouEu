@@ -22,9 +22,10 @@ def baixar_banco_bibliotecas():
     out.write(f.read())
     out.close()
 
+# Ainda nao colocada em uso; Talvez para uma versao futura
 def enviar_biblioteca(nome_biblioteca):
     f = open('Bibliotecas'+os.sep+nome_biblioteca+'.xml', 'r')
-    return client.put_file('Bibliotecas'+os.sep+nome_biblioteca+'.xml', f, overwrite=True)
+    return client.put_file('Bibliotecas/'+nome_biblioteca+'.xml', f, overwrite=True)
 
 def baixar_biblioteca(nome_biblioteca):
     f = client.get_file('Bibliotecas/'+nome_biblioteca+'.xml')
