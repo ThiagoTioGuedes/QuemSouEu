@@ -49,8 +49,9 @@ class Jogo(Screen):
         self.inicio_toque = self.tempo_passado
     
     def on_touch_up(self, touch):
-        self.inicio_toque = self.tempo_passado
-        
+        self.fim_toque = self.tempo_passado
+        print("Inicio Toque:"+str(self.inicio_toque))
+        print("Fim Toque:"+str(self.inicio_toque))
         # Se foi segurado por 1 segundo ou mais, passa com erro
         if (self.fim_toque - self.inicio_toque) > 1:
             self.player.toca_erro()
@@ -69,7 +70,7 @@ class Jogo(Screen):
         self.entrou = False;
 
     def update(self, dt):
-        if self.i < 60:
+        if self.tempo_passado < 60:
             # as paginas sao criadas no inicio, essa checagem impede que a contagem se inicie antes de entrar nesta pagina
             if self.entrou:
                 self.tempo_passado += dt
