@@ -5,11 +5,14 @@ import xml.etree.cElementTree as ET
 import os
 from xml.dom.minidom import parse, Node
 
+# Caminho dado para funcionar no android
+pasta_base = "/sdcard/download/"
+
 
 def abrir_arquivo_banco_bibliotecas():
     # Aqui abrimos o arquivo XML que lista todas as bibliotecas presentes no
     # servidor, ja foi previamente baixado, usando o minidom parser
-    domtree = parse('Bibliotecas'+os.sep+'banco_bibliotecas.xml')
+    domtree = parse(pasta_base+'Bibliotecas'+os.sep+'banco_bibliotecas.xml')
     collection = domtree.documentElement
 
     tmpRetorno = []
@@ -22,11 +25,12 @@ def abrir_arquivo_banco_bibliotecas():
     
 
 def lista_bibliotecas():
-    return tratar_nomes_biliotecas(os.listdir('Bibliotecas'));
+    return tratar_nomes_biliotecas(os.listdir(pasta_base+'Bibliotecas'));
+    
 
 def abrir_arquivo_biblioteca(nome_arquivo):
     # Aqui abrimos o arquivo XML usando o minidom parser
-    domtree = parse('Bibliotecas'+os.sep+nome_arquivo+".xml")
+    domtree = parse(pasta_base+'Bibliotecas'+os.sep+nome_arquivo+".xml")
     collection = domtree.documentElement
 
     tmpRetorno = []
@@ -35,20 +39,20 @@ def abrir_arquivo_biblioteca(nome_arquivo):
         tmpRetorno.append(item.firstChild.nodeValue)
 
     return tmpRetorno
+# Nao usado, mesmo funcionando
+# def adicionar_biblioteca(nome_biblioteca):
+#     domtree = parse(pasta_base+'Bibliotecas'+os.sep+'banco_bibliotecas.xml')
 
-def adicionar_biblioteca(nome_biblioteca):
-    domtree = parse('Bibliotecas'+os.sep+'banco_bibliotecas.xml')
+#     novo_no = domtree.createElement("Biblioteca")
+#     txt = domtree.createTextNode(nome_biblioteca)
+#     novo_no.appendChild(txt)
+#     domtree.childNodes[0].appendChild(novo_no)
 
-    novo_no = domtree.createElement("Biblioteca")
-    txt = domtree.createTextNode(nome_biblioteca)
-    novo_no.appendChild(txt)
-    domtree.childNodes[0].appendChild(novo_no)
+#     domtree.toxml()
+#     domtree.unlink()
 
-    domtree.toxml()
-    domtree.unlink()
-
-    NetHelper.enviar_biblioteca(nome_biblioteca)
-    NetHelper.enviar_biblioteca("banco_bibliotecas")
+#     NetHelper.enviar_biblioteca(nome_biblioteca)
+#     NetHelper.enviar_biblioteca("banco_bibliotecas")
 
 
 def criar_arquivo(nome_arquivo, lista_itens=[]):
@@ -57,13 +61,13 @@ def criar_arquivo(nome_arquivo, lista_itens=[]):
     for item in lista_itens:
         ET.SubElement(root, "Item").text = item
 
-    ET.ElementTree(root).write('Bibliotecas'+os.sep+ nome_arquivo + ".xml")
+    ET.ElementTree(root).write(pasta_base+'Bibliotecas'+os.sep+ nome_arquivo + ".xml")
 
 
 # metodos uteis
 def criar_pasta_bibliotecas():
-    if not os.path.exists('Bibliotecas'):
-        os.makedirs('Bibliotecas')
+    if not os.path.exists(pasta_base+'Bibliotecas'):
+        os.makedirs(pasta_base+'Bibliotecas')
         
 def tratar_nomes_biliotecas(lista):
     tmp_lista = []
