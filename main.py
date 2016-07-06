@@ -13,11 +13,11 @@ from kivy.uix.label import Label
 biblioteca_selecionada = ''
 
 class ListaBibliotecaParaBaixar(Screen):
-    lista_bibliotecas = []
     lista_view = ObjectProperty(None)
+    lista_bibliotecas = []
 
     def dismiss(self):
-        self.parent.current = 'editaBiblioteca'
+        self.parent.current = 'listaBibliotecaBaixar'
     
     def on_enter(self, *args):
         NetHelper.baixar_banco_bibliotecas()
@@ -110,7 +110,10 @@ class EditaBiblioteca(Screen):
     def criar_item(self):
         self.lista_itens.append(self.nome_item.text)
         self.nome_item.text = ''
+
+    def on_leave(self, *args):
         self.salvar_biblioteca()
+
 
     def remover_item(self):
         for item in self.lista_view.adapter.selection:
@@ -152,6 +155,7 @@ class QuemSouEuApp(App):
         sm.add_widget(ListaBiblioteca(name='listaBiblioteca'))
         sm.add_widget(EditaBiblioteca(name='editaBiblioteca'))
         sm.add_widget(ListaBibliotecaParaJogar(name='listaBibliotecaJogar'))
+        sm.add_widget(ListaBibliotecaParaBaixar(name='listaBibliotecaBaixar'))
         sm.add_widget(game)
 
         Clock.schedule_interval(game.update, 1.0 / 60.0)

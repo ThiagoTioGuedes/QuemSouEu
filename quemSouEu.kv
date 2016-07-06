@@ -43,6 +43,7 @@
     FloatLayout:
         TextInput:
             id: input_biblioteca
+            on_text_validate: root.criar_biblioteca()
             multiline: False
             font_size: 30
             # Ao escolher a altura do input como 0, o kivy o cria com a sua altura minima, uma linha
@@ -102,6 +103,7 @@
             color: [1, 1, 1, 1]
         TextInput:
             id: input_item
+            on_text_validate: root.criar_item()
             multiline: False
             font_size: 30
             # Ao escolher a altura do input como 0, o kivy o cria com a sua altura minima, uma linha
@@ -144,7 +146,12 @@
             text: 'Retornar'
             on_press: root.parent.current = 'menu'
                     
-                    
+
+<ListItemButton>
+    selected_color: 0, 0, 1, 1
+    deselected_color: 0, 0, 0, 1
+
+
 <ListaBibliotecaParaJogar>
     lista_view: lista
     FloatLayout:
