@@ -16,18 +16,21 @@ class ListaBibliotecaParaBaixar(Screen):
     lista_view = ObjectProperty(None)
     lista_bibliotecas = ListProperty([])
 
-    def dismiss(self):
-        self.parent.current = 'listaBibliotecaBaixar'
+
     
     def on_enter(self, *args):
         NetHelper.baixar_banco_bibliotecas()
         self.lista_bibliotecas = LibraryHelper.abrir_arquivo_banco_bibliotecas()
 
     def baixar_biblioteca(self):
+        def dismiss(instance):
+            self.parent.current = 'editaBiblioteca'
+
         biblioteca_selecionada = self.lista_view.adapter.selection[0].text
         NetHelper.baixar_biblioteca(self.lista_view.adapter.selection[0].text)
-        popup = Popup(title='Sucesso', content=Label(text='Biblioteca '+biblioteca_selecionada+' foi baixada com sucesso'))
-        popup.bind(on_dismiss=self.dismiss)
+        popup = Popup(title='Sucesso', content=Label(text='Biblioteca '+biblioteca_selecionada+' foi baixada com sucesso'),
+                      size_hint=(.65, .65))
+        popup.bind(on_dismiss=dismiss)
         popup.open()
 
 class Jogo(Screen):
@@ -70,11 +73,6 @@ class Jogo(Screen):
     def on_leave(self, *args):
         self.entrou = False
 
-    def dismiss(self):
-        self.acertos = 0
-        self.erros = 0
-        self.parent.current = 'menu'
-
     def update(self, dt):
         if self.tempo_passado < 5:
             # as paginas sao criadas no inicio, essa checagem impede que a contagem se inicie antes de entrar nesta pagina
@@ -83,11 +81,16 @@ class Jogo(Screen):
 
             self.contagem.text = "{:3.2f}".format(self.tempo_passado)
         else:
+            def dismiss(instance):
+                self.acertos = 0
+                self.erros = 0
+                self.parent.current = 'menu'
+
             self.tempo_passado = 0
             self.entrou = False
             popup = Popup(title='Fim de jogo', content=Label(text='Na categoria '+biblioteca_selecionada+' voce acertou '+str(self.acertos)),
                           size_hint=(.65, .65))
-            popup.bind(on_dismiss=self.dismiss)
+            popup.bind(on_dismiss=dismiss)
             popup.open()
 
 
