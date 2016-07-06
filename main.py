@@ -36,6 +36,8 @@ class Jogo(Screen):
     item = ObjectProperty(None)
     lista_itens = []
     tempo_passado = 0
+    acertos = 0
+    erros = 0
     # variaveis que servirao para contar o tempo entre o comeco e o fim
     inicio_toque = 0
     fim_toque = 0
@@ -55,6 +57,7 @@ class Jogo(Screen):
             self.player.toca_erro()
         else:
             self.player.toca_acerto()
+            self.acertos += 1
         
         self.seleciona_item()
 
@@ -65,10 +68,15 @@ class Jogo(Screen):
         self.entrou = True
 
     def on_leave(self, *args):
-        self.entrou = False;
+        self.entrou = False
+
+    def dismiss(self):
+        self.acertos = 0
+        self.erros = 0
+        self.parent.current = 'menu'
 
     def update(self, dt):
-        if self.tempo_passado < 60:
+        if self.tempo_passado < 5:
             # as paginas sao criadas no inicio, essa checagem impede que a contagem se inicie antes de entrar nesta pagina
             if self.entrou:
                 self.tempo_passado += dt
@@ -76,7 +84,13 @@ class Jogo(Screen):
             self.contagem.text = "{:3.2f}".format(self.tempo_passado)
         else:
             self.tempo_passado = 0
-            self.parent.current = 'menu'
+            self.entrou = False
+            popup = Popup(title='Fim de jogo', content=Label(text='Na categoria '+biblioteca_selecionada+' voce acertou '+str(self.acertos)),
+                          size_hint=(.65, .65))
+            popup.bind(on_dismiss=self.dismiss)
+            popup.open()
+
+
 
 
 class ListaBibliotecaParaJogar(Screen):
