@@ -14,7 +14,7 @@ biblioteca_selecionada = ''
 
 class ListaBibliotecaParaBaixar(Screen):
     lista_view = ObjectProperty(None)
-    lista_bibliotecas = []
+    lista_bibliotecas = ListProperty([])
 
     def dismiss(self):
         self.parent.current = 'listaBibliotecaBaixar'

@@ -77,7 +77,7 @@
                 cls=ListItemButton)
             canvas.before:
                 Color:
-                    rgb: 1,.5,0
+                    rgb: 0,0,0
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -135,7 +135,7 @@
                 cls=ListItemButton)
             canvas.before:
                 Color:
-                    rgb: 1,.5,0
+                    rgb: 0,0,0
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -173,7 +173,7 @@
                 cls=ListItemButton)
             canvas.before:
                 Color:
-                    rgb: 1,.5,0
+                    rgb: 0,0,0
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -199,10 +199,11 @@
 
 <ListaBibliotecaParaBaixar>
     lista_view: lista
+
     FloatLayout:
         Button:
             size_hint: (.5, .1)
-            pos_hint: {'center_x':.5, 'center_y':.95}
+            pos_hint: {'center_x':.5, 'center_y':.90}
             text: 'Baixar'
             on_press: root.baixar_biblioteca()
 
@@ -218,7 +219,7 @@
                 cls=ListItemButton)
             canvas.before:
                 Color:
-                    rgb: 1,.5,0
+                    rgb: 0,0,0
                 Rectangle:
                     pos: self.pos
                     size: self.size
