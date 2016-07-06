@@ -6,8 +6,8 @@ import os
 from xml.dom.minidom import parse, Node
 
 # Caminho dado para funcionar no android
-pasta_base = "/sdcard/download/"
-
+# pasta_base = "/storage/sdcard0/download/"
+pasta_base = ""
 
 def abrir_arquivo_banco_bibliotecas():
     # Aqui abrimos o arquivo XML que lista todas as bibliotecas presentes no

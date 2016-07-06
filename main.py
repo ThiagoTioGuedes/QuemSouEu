@@ -16,23 +16,40 @@ class ListaBibliotecaParaBaixar(Screen):
     lista_view = ObjectProperty(None)
     lista_bibliotecas = ListProperty([])
 
-
+    mensagem = "Nao foi possivel se conectar ao servidor"
+    titulo = "Erro"
     
     def on_enter(self, *args):
-        NetHelper.baixar_banco_bibliotecas()
-        self.lista_bibliotecas = LibraryHelper.abrir_arquivo_banco_bibliotecas()
+        try:
+            NetHelper.baixar_banco_bibliotecas()
+            self.lista_bibliotecas = LibraryHelper.abrir_arquivo_banco_bibliotecas()
+        except Exception:
+            def dismiss(instance):
+                self.parent.current = 'menu'
+
+            popup = Popup(title='Erro', content=Label(text='Nao foi possivel se conectar ao servidor'),
+                      size_hint=(.5, .5))
+            popup.bind(on_dismiss=dismiss)
+            popup.open()
 
     def baixar_biblioteca(self):
         def dismiss(instance):
-            self.parent.current = 'editaBiblioteca'
+            self.parent.current = 'listaBibliotecaBaixar'
 
-        biblioteca_selecionada = self.lista_view.adapter.selection[0].text
-        NetHelper.baixar_biblioteca(self.lista_view.adapter.selection[0].text)
-        popup = Popup(title='Sucesso', content=Label(text='Biblioteca '+biblioteca_selecionada+' foi baixada com sucesso'),
-                      size_hint=(.65, .65))
-        popup.bind(on_dismiss=dismiss)
-        popup.open()
-        
+        try:
+            biblioteca_selecionada = self.lista_view.adapter.selection[0].text
+            self.mensagem = 'Biblioteca '+biblioteca_selecionada+' foi baixada com sucesso'
+            self.titulo = 'Sucesso'
+            NetHelper.baixar_biblioteca(self.lista_view.adapter.selection[0].text)
+        except Exception:
+            self.mensagem = "Nao foi possivel se conectar ao servidor"
+            self.titulo = "Erro"
+        finally:
+            popup = Popup(title=self.titulo, content=Label(text=self.mensagem),
+                          size_hint=(.5, .5))
+            popup.bind(on_dismiss=dismiss)
+            popup.open()
+
 
 class Jogo(Screen):
     player = SoundManager()
