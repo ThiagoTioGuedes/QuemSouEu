@@ -32,6 +32,7 @@ class ListaBibliotecaParaBaixar(Screen):
                       size_hint=(.65, .65))
         popup.bind(on_dismiss=dismiss)
         popup.open()
+        
 
 class Jogo(Screen):
     player = SoundManager()
@@ -74,7 +75,7 @@ class Jogo(Screen):
         self.entrou = False
 
     def update(self, dt):
-        if self.tempo_passado < 5:
+        if self.tempo_passado < 60:
             # as paginas sao criadas no inicio, essa checagem impede que a contagem se inicie antes de entrar nesta pagina
             if self.entrou:
                 self.tempo_passado += dt
@@ -123,8 +124,9 @@ class EditaBiblioteca(Screen):
         self.biblioteca_label.text = biblioteca_selecionada
 
     def criar_item(self):
-        self.lista_itens.append(self.nome_item.text)
-        self.nome_item.text = ''
+        if self.nome_item.text != '' and self.nome_item.text not in self.lista_itens:
+            self.lista_itens.append(self.nome_item.text)
+            self.nome_item.text = ''
 
     def on_leave(self, *args):
         self.salvar_biblioteca()
@@ -150,10 +152,11 @@ class ListaBiblioteca(Screen):
         self.nome_biblioteca.text = ''
 
     def editar_biblioteca(self):
-        global biblioteca_selecionada
-        biblioteca_selecionada = self.lista_view.adapter.selection[0].text
-        # o pai eh sm, o screenManager
-        self.parent.current = 'editaBiblioteca'
+        if len(self.lista_view.adapter.selection)>0:
+            global biblioteca_selecionada
+            biblioteca_selecionada = self.lista_view.adapter.selection[0].text
+            # o pai eh sm, o screenManager
+            self.parent.current = 'editaBiblioteca'
 
 
 class MenuPrincipal(Screen):
