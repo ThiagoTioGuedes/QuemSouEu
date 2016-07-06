@@ -6,33 +6,41 @@
 
 <MenuPrincipal>:
     FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'Assets/bg.jpg'
+
         Button:
-            size_hint: (.5, .15)
+            size_hint: (.3, .15)
             pos_hint: {'center_x':.5, 'center_y':.80}
-            # background_normal: ''
-            # background_color: [0,0,0,0]
+            background_normal: 'Asset/bg.png'
+            background_color: [0,.1,.5,1]
             text: 'Jogar'
             on_press: root.manager.current = 'listaBibliotecaJogar'
 
         Button:
-            size_hint: (.5, .15)
+            size_hint: (.3, .15)
             pos_hint: {'center_x':.5, 'center_y':.60}
-            # background_normal: ''
-            # background_color: [0,0,0,0]
+            background_normal: 'Asset/bg.png'
+            background_color: [0,0,.6,1]
             text: 'Baixar Bibliotecas'
             on_press: root.manager.current = 'listaBibliotecaBaixar'
 
         Button:
-            size_hint: (.5, .15)
+            size_hint: (.3, .15)
             pos_hint: {'center_x':.5, 'center_y':.40}
-            size: root.width/2, root.height/6
+            background_normal: 'Asset/bg.png'
+            background_color: [0,0,.7,1]
             text: 'Bibliotecas Locais'
             on_press: root.manager.current = 'listaBiblioteca'
 
         Button:
-            size_hint: (.5, .15)
+            size_hint: (.3, .15)
             pos_hint: {'center_x':.5, 'center_y':.20}
-            size: root.width/2, root.height/6
+            background_normal: 'Asset/bg.png'
+            background_color: [0,0,.8,1]
             text: 'Sair'
             on_press: app.stop()
 
@@ -41,52 +49,51 @@
     lista_view: lista
 
     FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'Assets/bg.jpg'
+
         TextInput:
             id: input_biblioteca
             on_text_validate: root.criar_biblioteca()
             multiline: False
             font_size: 30
             # Ao escolher a altura do input como 0, o kivy o cria com a sua altura minima, uma linha
-            size_hint: (1, .1)
+            size_hint: (.6, .1)
             height: self.minimum_height
-            pos_hint: {'center_x':.5, 'y':.9}
+            pos_hint: {'center_x':.35, 'center_y':.9}
 
         Button:
-            size_hint: (.4, .1)
-            pos_hint: {'center_x':.25, 'y':.8}
+            size_hint: (.25, .1)
+            pos_hint: {'center_x':.80, 'center_y':.9}
             text: 'Nova'
             on_press: root.criar_biblioteca()
-
-        Button:
-            size_hint: (.4, .1)
-            pos_hint: {'center_x':.75, 'y':.8}
-            text: 'Editar'
-            on_press: root.editar_biblioteca()
-
 
 
         ListView:
             id: lista
-            size_hint: (1, .7)
-            pos_hint: {'center_x':.5, 'center_y':.45}
+            size_hint: (.6, .6)
+            pos_hint: {'center_x':.5, 'center_y':.5}
             adapter:
                 ListAdapter(
                 data=root.lista_bibliotecas,
                 selection_mode='single',
                 allow_empty_selection=False,
                 cls=ListItemButton)
-            canvas.before:
-                Color:
-                    rgb: 0,0,0
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
 
         Button:
             size_hint: (.2, .1)
-            pos_hint: {'center_x':.1, 'center_y':.05}
+            pos_hint: {'center_x':.15, 'center_y':.1}
             text: 'Retornar'
             on_press: root.parent.current = 'menu'
+
+        Button:
+            size_hint: (.2, .1)
+            pos_hint: {'center_x':.85, 'center_y':.1}
+            text: 'Editar'
+            on_press: root.editar_biblioteca()
 
 
 <EditaBiblioteca>
@@ -95,93 +102,109 @@
     biblioteca_label: nome_biblioteca
 
     FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'Assets/bg.jpg'
+
         Label:
             id: nome_biblioteca
             font_size:30
             size_hint:(.1, .1)
             pos_hint: {'center_x':.5, 'center_y':.95}
             color: [1, 1, 1, 1]
+
         TextInput:
             id: input_item
             on_text_validate: root.criar_item()
             multiline: False
             font_size: 30
             # Ao escolher a altura do input como 0, o kivy o cria com a sua altura minima, uma linha
-            size_hint: (1, .1)
+            size_hint: (.6, .1)
             height: self.minimum_height
-            pos_hint: {'center_x':.5, 'center_y':.85}
+            pos_hint: {'center_x':.35, 'center_y':.85}
 
         Button:
-            size_hint: (.5, .1)
-            pos_hint: {'center_x':.25, 'center_y':.75}
+            size_hint: (.25, .1)
+            pos_hint: {'center_x':.8, 'center_y':.85}
             text: 'Novo Item'
             on_press: root.criar_item()
 
-        Button:
-            size_hint: (.5, .1)
-            pos_hint: {'center_x':.75, 'center_y':.75}
-            text: 'Remover Item'
-            on_press: root.remover_item()
-
         ListView:
             id: lista
-            size_hint: (1, .6)
-            pos_hint: {'center_x':.5, 'center_y':.40}
+            size_hint: (.6, .55)
+            pos_hint: {'center_x':.5, 'center_y':.50}
             adapter:
                 ListAdapter(
                 data=root.lista_itens,
                 selection_mode='multiple',
                 allow_empty_selection=True,
                 cls=ListItemButton)
-            canvas.before:
-                Color:
-                    rgb: 0,0,0
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
+
 
         Button:
             size_hint: (.2, .1)
-            pos_hint: {'center_x':.1, 'center_y':.05}
+            pos_hint: {'center_x':.15, 'center_y':.1}
             text: 'Retornar'
-            on_press: root.parent.current = 'menu'
+            on_press: root.manager.current = 'listaBiblioteca'
+
+        Button:
+            size_hint: (.2, .1)
+            pos_hint: {'center_x':.85, 'center_y':.1}
+            text: 'Remover Item'
+            on_press: root.remover_item()
                     
 
 <ListItemButton>
     selected_color: 0, 0, 1, 1
-    deselected_color: 0, 0, 0, 1
+    deselected_color: 0, 0, 0, 0
 
 
 <ListaBibliotecaParaJogar>
     lista_view: lista
     FloatLayout:
-        Button:
-            size_hint: (.5, .1)
-            pos_hint: {'center_x':.5, 'center_y':.95}
-            text: 'Escolher'
-            on_press: root.jogar()
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'Assets/bg.jpg'
 
         ListView:
             id: lista
-            size_hint: (.8, .9)
-            pos_hint: {'center_x':.5, 'center_y':.45}
+            size_hint: (.6, .7)
+            pos_hint: {'center_x':.5, 'center_y':.60}
             adapter:
                 ListAdapter(
                 data=root.lista_bibliotecas,
                 selection_mode='single',
                 allow_empty_selection=False,
                 cls=ListItemButton)
-            canvas.before:
-                Color:
-                    rgb: 0,0,0
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
+
+
+        Button:
+            size_hint: (.2, .1)
+            pos_hint: {'center_x':.85, 'center_y':.1}
+            text: 'Escolher'
+            on_press: root.jogar()
+
+        Button:
+            size_hint: (.2, .1)
+            pos_hint: {'center_x':.15, 'center_y':.1}
+            text: 'Retornar'
+            on_press: root.parent.current = 'menu'
                     
 
 <Jogo>
     contagem: label_contagem
     item: label_item
+
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Assets/bg.png'
+
     FloatLayout:
         Label:
             id: label_contagem
@@ -200,32 +223,34 @@
 <ListaBibliotecaParaBaixar>
     lista_view: lista
 
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Assets/bg.jpg'
+
     FloatLayout:
-        Button:
-            size_hint: (.5, .1)
-            pos_hint: {'center_x':.5, 'center_y':.90}
-            text: 'Baixar'
-            on_press: root.baixar_biblioteca()
 
         ListView:
             id: lista
-            size_hint: (.8, .7)
-            pos_hint: {'center_x':.5, 'center_y':.45}
+            size_hint: (.6, .7)
+            pos_hint: {'center_x':.5, 'center_y':.60}
             adapter:
                 ListAdapter(
                 data=root.lista_bibliotecas,
                 selection_mode='single',
                 allow_empty_selection=False,
                 cls=ListItemButton)
-            canvas.before:
-                Color:
-                    rgb: 0,0,0
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            
+
         Button:
             size_hint: (.2, .1)
-            pos_hint: {'center_x':.1, 'center_y':.05}
+            pos_hint: {'center_x':.85, 'center_y':.1}
+            text: 'Baixar'
+            on_press: root.baixar_biblioteca()
+
+        Button:
+            size_hint: (.2, .1)
+            pos_hint: {'center_x':.15, 'center_y':.1}
             text: 'Retornar'
-            on_press: root.parent.current = 'menu'    
+            on_press: root.parent.current = 'menu'
+            # background_normal: 'Assets/voltar-2.png'

@@ -50,10 +50,8 @@ class Jogo(Screen):
     
     def on_touch_up(self, touch):
         self.fim_toque = self.tempo_passado
-        print("Inicio Toque:"+str(self.inicio_toque))
-        print("Fim Toque:"+str(self.inicio_toque))
         # Se foi segurado por 1 segundo ou mais, passa com erro
-        if (self.fim_toque - self.inicio_toque) > 1:
+        if (self.fim_toque - self.inicio_toque) > .5:
             self.player.toca_erro()
         else:
             self.player.toca_acerto()
@@ -132,6 +130,7 @@ class ListaBiblioteca(Screen):
     def criar_biblioteca(self):
         self.lista_bibliotecas.append(LibraryHelper.tratar_nome_biblioteca(self.nome_biblioteca.text))
         LibraryHelper.criar_arquivo(LibraryHelper.tratar_nome_biblioteca(self.nome_biblioteca.text), [])
+        self.nome_biblioteca.text = ''
 
     def editar_biblioteca(self):
         global biblioteca_selecionada
